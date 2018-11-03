@@ -27,6 +27,7 @@
 
 #define BATADV_NL_NAME "batadv"
 
+#define BATADV_NL_MCAST_GROUP_CONFIG	"config"
 #define BATADV_NL_MCAST_GROUP_TPMETER	"tpmeter"
 
 /**
@@ -344,6 +345,26 @@ enum batadv_nl_attrs {
 	 */
 	BATADV_ATTR_MCAST_FLAGS_PRIV,
 
+	/**
+	 * @BATADV_ATTR_VLANID: VLAN id on top of soft interface
+	 */
+	BATADV_ATTR_VLANID,
+
+	/**
+	 * @BATADV_ATTR_OPTION_NAME: name of option to modify
+	 */
+	BATADV_ATTR_OPTION_NAME,
+
+	/**
+	 * @BATADV_ATTR_OPTION_TYPE: type of @BATADV_ATTR_OPTION_VALUE
+	 */
+	BATADV_ATTR_OPTION_TYPE,
+
+	/**
+	 * @BATADV_ATTR_OPTION_VALUE: value set for @BATADV_ATTR_OPTION_NAME
+	 */
+	BATADV_ATTR_OPTION_VALUE,
+
 	/* add attributes above here, update the policy in netlink.c */
 
 	/**
@@ -442,6 +463,40 @@ enum batadv_nl_commands {
 	 * @BATADV_CMD_GET_MCAST_FLAGS: Query list of multicast flags
 	 */
 	BATADV_CMD_GET_MCAST_FLAGS,
+
+	/**
+	 * @BATADV_CMD_GET_OPTION: Get option(s) from softif
+	 */
+	BATADV_CMD_GET_OPTION,
+
+	/**
+	 * @BATADV_CMD_SET_OPTION: Set option for softif
+	 */
+	BATADV_CMD_SET_OPTION,
+
+	/**
+	 * @BATADV_CMD_GET_OPTION_HARDIF: Get option(s) from a hardif of the
+	 *  current softif
+	 */
+	BATADV_CMD_GET_OPTION_HARDIF,
+
+	/**
+	 * @BATADV_CMD_SET_OPTION_HARDIF: Set option for hardif of the
+	 *  current softif
+	 */
+	BATADV_CMD_SET_OPTION_HARDIF,
+
+	/**
+	 * @BATADV_CMD_GET_OPTION_VLAN: Get option(s) from a VLAN of the
+	 *  current softif
+	 */
+	BATADV_CMD_GET_OPTION_VLAN,
+
+	/**
+	 * @BATADV_CMD_SET_OPTION_VLAN: Set option for VLAN of the
+	 *  current softif
+	 */
+	BATADV_CMD_SET_OPTION_VLAN,
 
 	/* add new commands above here */
 

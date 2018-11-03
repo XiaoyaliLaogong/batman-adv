@@ -49,6 +49,7 @@
 #include "gateway_client.h"
 #include "hard-interface.h"
 #include "multicast.h"
+#include "netlink_cfg.h"
 #include "originator.h"
 #include "soft-interface.h"
 #include "tp_meter.h"
@@ -56,12 +57,8 @@
 
 struct genl_family batadv_netlink_family;
 
-/* multicast groups */
-enum batadv_netlink_multicast_groups {
-	BATADV_NL_MCGRP_TPMETER,
-};
-
 static const struct genl_multicast_group batadv_netlink_mcgrps[] = {
+	[BATADV_NL_MCGRP_CONFIG] = { .name = BATADV_NL_MCAST_GROUP_CONFIG },
 	[BATADV_NL_MCGRP_TPMETER] = { .name = BATADV_NL_MCAST_GROUP_TPMETER },
 };
 
@@ -104,6 +101,9 @@ static const struct nla_policy batadv_netlink_policy[NUM_BATADV_ATTR] = {
 	[BATADV_ATTR_DAT_CACHE_VID]		= { .type = NLA_U16 },
 	[BATADV_ATTR_MCAST_FLAGS]		= { .type = NLA_U32 },
 	[BATADV_ATTR_MCAST_FLAGS_PRIV]		= { .type = NLA_U32 },
+	[BATADV_ATTR_VLANID]			= { .type = NLA_U16 },
+	[BATADV_ATTR_OPTION_NAME]		= { .type = NLA_NUL_STRING },
+	[BATADV_ATTR_OPTION_TYPE]		= { .type = NLA_U8 },
 };
 
 /**
@@ -630,7 +630,45 @@ static const struct genl_ops batadv_netlink_ops[] = {
 		.policy = batadv_netlink_policy,
 		.dumpit = batadv_mcast_flags_dump,
 	},
-
+	{
+		.cmd = BATADV_CMD_GET_OPTION,
+		/* can be retrieved by unprivileged users */
+		.policy = batadv_netlink_policy,
+		.dumpit = batadv_get_option_dump,
+		.doit = batadv_get_option,
+	},
+	{
+		.cmd = BATADV_CMD_SET_OPTION,
+		.flags = GENL_ADMIN_PERM,
+		.policy = batadv_netlink_policy,
+		.doit = batadv_set_option,
+	},
+	{
+		.cmd = BATADV_CMD_GET_OPTION_HARDIF,
+		/* can be retrieved by unprivileged users */
+		.policy = batadv_netlink_policy,
+		.dumpit = batadv_get_option_hardif_dump,
+		.doit = batadv_get_option_hardif,
+	},
+	{
+		.cmd = BATADV_CMD_SET_OPTION_HARDIF,
+		.flags = GENL_ADMIN_PERM,
+		.policy = batadv_netlink_policy,
+		.doit = batadv_set_option_hardif,
+	},
+	{
+		.cmd = BATADV_CMD_GET_OPTION_VLAN,
+		/* can be retrieved by unprivileged users */
+		.policy = batadv_netlink_policy,
+		.dumpit = batadv_get_option_vlan_dump,
+		.doit = batadv_get_option_vlan,
+	},
+	{
+		.cmd = BATADV_CMD_SET_OPTION_VLAN,
+		.flags = GENL_ADMIN_PERM,
+		.policy = batadv_netlink_policy,
+		.doit = batadv_set_option_vlan,
+	},
 };
 
 struct genl_family batadv_netlink_family __ro_after_init = {

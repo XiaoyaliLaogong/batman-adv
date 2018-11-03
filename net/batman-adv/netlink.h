@@ -26,6 +26,12 @@
 
 struct nlmsghdr;
 
+/* multicast groups */
+enum batadv_netlink_multicast_groups {
+	BATADV_NL_MCGRP_CONFIG,
+	BATADV_NL_MCGRP_TPMETER,
+};
+
 void batadv_netlink_register(void);
 void batadv_netlink_unregister(void);
 int batadv_netlink_get_ifindex(const struct nlmsghdr *nlh, int attrtype);
